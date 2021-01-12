@@ -4,9 +4,13 @@ from typing import Dict, Tuple, Callable
 import traceback
 import json
 import asyncio
+from discord.channel import TextChannel
 import lupa
+import pyduktape
 
 runtime_lua = lupa.LuaRuntime(unpack_returned_tuples=True)
+runtime_js = pyduktape.DuktapeContext()
+
 prefix = "[]"
 
 with open("private/token.json") as f:
@@ -39,14 +43,20 @@ async def on_message(message : discord.Message):
 
     if message.content.startswith("[py]"):
         val = eval(message.content[4:])
-        await message.channel.send(str(val))
+        await message.channel.send(str(val)[:2000])
         return
 
     if message.content.startswith("[lua]"):
-        import lua
         c = message.content[5:]
-        val = lua.runtime.execute(c)
-        await message.channel.send(str(val))
+        val = runtime_lua.execute(c, message)
+        await message.channel.send(str(val)[:2000])
+        return
+
+    if message.content.startswith("[js]"):
+        runtime_js.set_globals(message=message)
+        c = message.content[4:]
+        val = runtime_js.eval_js(c)
+        await message.channel.send(str(val)[:2000])
         return
 
     if message.content.startswith(prefix):
@@ -63,7 +73,37 @@ async def on_message(message : discord.Message):
 
 def register_command(str, fn):
     print("registered command - " + str)
-    commands[str] = fn
+    commands[str] = asyncio.coroutine(fn)
+
+def lua_create_task(coro):
+    asyncio.create_task(coro)
+
+globals_lua = runtime_lua.globals()
+globals_lua["register_command"] = register_command
+globals_lua["bot"] = globals()
+globals_lua["asyncio"] = asyncio
+
+runtime_js.set_globals(
+    register_command=register_command,
+    bot=globals(),
+    asyncio=asyncio
+)
 
 def run():
     client.run(token)
+
+import os
+import importlib
+
+for filename in os.listdir("autoload"):
+    if filename.endswith(".py"):
+        print("python import: " + filename)
+        importlib.import_module("autoload." + filename[:-3])
+    elif filename.endswith(".lua"):
+        print("lua import: " + filename)
+        runtime_lua.require("autoload." + filename[:-4])
+    elif filename.endswith(".js"):
+        print("js import: " + filename)
+        runtime_js.eval_js_file("autoload/" + filename[:-3])
+    else:
+        print("ignored " + filename)

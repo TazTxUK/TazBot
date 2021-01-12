@@ -27,9 +27,6 @@ async def com_help(message : discord.Message, com : List[str]):
         s += "[]" + cmd + "\n"
     await message.channel.send(s)
 
-import lua
-
-bot.register_command("lua", lua.com_lua)
 bot.register_command("ping", com_ping)
 bot.register_command("users", com_users)
 bot.register_command("servers", com_guilds)
