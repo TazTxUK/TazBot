@@ -1,0 +1,49 @@
+{
+    "taz": {
+        "forename": "Jeremy",
+        "surname": "Carvery",
+        "nickname": "Taz",
+        "discord_user": 179652150710763520
+    },
+    "dan": {
+        "forename": "Daniel",
+        "surname": "Lankton",
+        "nickname": "Dan",
+        "discord_user": 179651053887815681
+    },
+    "hawk": {
+        "forename": "Jonathan",
+        "surname": "Parker",
+        "nickname": "Hawk",
+        "discord_user": 179651817762717696
+    },
+    "shape": {
+        "forename": "Brian",
+        "surname": "Shapington",
+        "nickname": "Shape",
+        "discord_user": 179967331336716289
+    },
+    "gatwick": {
+        "forename": "Matmias",
+        "surname": "Gatwick",
+        "nickname": "Gatwick",
+        "discord_user": 180377000077295616
+    },
+    "noirarc": {
+        "forename": "Ben",
+        "nickname": "Ben",
+        "discord_user": 209011470401404928
+    },
+    "parzival": {
+        "forename": "Peter",
+        "surname": "Percival",
+        "nickname": "Parzival",
+        "discord_user": 265153804608077826
+    },
+    "hilton": {
+        "forename": "George",
+        "surname": "Matthews",
+        "nickname": "Hilton",
+        "discord_user": 518122303310135296
+    }
+}
